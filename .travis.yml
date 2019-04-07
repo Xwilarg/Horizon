@@ -1,7 +1,4 @@
 language: php
 
-before_script:
-	- curl -o ~/.phpenv/versions/hhvm/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar
-  
 script:
-	- ./phpunit tests/tests.php
+  - phpunit tests/tests.php
