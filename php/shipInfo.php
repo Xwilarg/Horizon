@@ -24,5 +24,8 @@
     $azurLane = file_get_contents($url, false, $context);
     preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $azurName . '.png)/', $azurLane, $matches);
     $azurLaneImage = "https://azurlane.koumakan.jp" . $matches[1]; // Character image
-    echo(json_encode(array($kancolleImage, $azurLaneImage, $kancolleAudio, $kancolleText)));
+    preg_match('/<td><a href="([^"]+)"[^>]+>Play<\/a>\n<\/td>\n<td> Self Introduction\n<\/td>\n<td>[^<]+<\/td>\n<td>([^\n]+)/', $azurLane, $matches);
+    $azurLaneAudio = $matches[1]; // Character intro voiceline
+    $azurLaneText = $matches[2]; // Character intro text
+    echo(json_encode(array($kancolleImage, $azurLaneImage, $kancolleAudio, $azurLaneAudio, $kancolleText, $azurLaneText)));
 ?>
