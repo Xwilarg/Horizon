@@ -13,15 +13,23 @@ class ShipInfo
     public static function GetKancolleInfo($name) {
         $context = ShipInfo::GetContext();
         // base URL is the character page in the Wikia, url is to the gallery
-        $baseUrl = json_decode(file_get_contents("https://kancolle.wikia.com/api/v1/Search/List?query=" . urlencode($name) . "&limit=1", false, $context))->items[0]->url;
+        $json = json_decode(file_get_contents("https://kancolle.wikia.com/api/v1/Search/List?query=" . urlencode($name) . "&limit=1", false, $context));
+        $baseUrl = $json->items[0]->url;
         $url = $baseUrl . "/Gallery";
+        $kancolleName = $json->items[0]->title;
         $kancolle = file_get_contents($url, false, $context);
         preg_match_all('/img src="([^"]+)"/', $kancolle, $matches);
         $kancolleImage = $matches[1][1]; // Character image
         $kancolleMain = file_get_contents($baseUrl, false, $context);
-        preg_match('/<span[^>]+><a href="([^"]+)".+<\/span> Library\n.+<\/span>\n.+shipquote-en\">(.+)/', $kancolleMain, $matches);
-        $kancolleAudio = $matches[1]; // Character intro voiceline
-        $kancolleText = $matches[2]; // Character intro text
+        // Get URL to audio file
+        preg_match('/https:\/\/vignette\.wikia\.nocookie\.net\/kancolle\/images\/[^\/]+\/[^\/]+\/' . $kancolleName . '-Library\.ogg/', $kancolleMain, $matches);
+        $kancolleAudio = $matches[0]; // Character intro voiceline
+        // English description is right after the URL
+        $kancolleText =  explode('</td>',
+                        explode('class="shipquote-en">',
+                            explode($matches[0], $kancolleMain)[1]
+                        )[1]
+                    )[0]; // Character intro text
         return(array($kancolleImage, $kancolleAudio, $kancolleText));
     }
 
