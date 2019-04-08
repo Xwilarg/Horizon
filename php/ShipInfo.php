@@ -36,7 +36,7 @@ class ShipInfo
     public static function GetAzurLaneInfo($name) {
         $context = ShipInfo::GetContext();
         // url is the character page in the wikia
-        $azurName = json_decode(file_get_contents("https://azurlane.koumakan.jp/w/api.php?action=opensearch&search=" . urlencode($name) . "&limit=1", false, $context))[1][0];
+        $azurName = str_replace(" ", "_", json_decode(file_get_contents("https://azurlane.koumakan.jp/w/api.php?action=opensearch&search=" . urlencode($name) . "&limit=1", false, $context))[1][0]);
         $url = "https://azurlane.koumakan.jp/" . $azurName;
         $azurLane = file_get_contents($url, false, $context);
         preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $azurName . '.png)/', $azurLane, $matches);
