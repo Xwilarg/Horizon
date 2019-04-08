@@ -1,17 +1,17 @@
 <?php
 class ShipInfo
 {
-    public static function Init() {
-        $options = [
+    private static function GetContext() {
+        return stream_context_create([
             "http" => [
                 "method" => "GET",
                 "header" => "User-Agent: Mozilla/5.0 horizon.zirk.eu\r\n"
             ]
-        ];
-        $context = stream_context_create($options);
+        ]);
     }
 
     public static function GetKancolleInfo($name) {
+        $context = ShipInfo::GetContext();
         // base URL is the character page in the Wikia, url is to the gallery
         $baseUrl = json_decode(file_get_contents("https://kancolle.wikia.com/api/v1/Search/List?query=" . urlencode($name) . "&limit=1", false, $context))->items[0]->url;
         $url = $baseUrl . "/Gallery";
@@ -26,6 +26,7 @@ class ShipInfo
     }
 
     public static function GetAzurLaneInfo($name) {
+        $context = ShipInfo::GetContext();
         // url is the character page in the wikia
         $azurName = json_decode(file_get_contents("https://azurlane.koumakan.jp/w/api.php?action=opensearch&search=" . urlencode($name) . "&limit=1", false, $context))[1][0];
         $url = "https://azurlane.koumakan.jp/" . $azurName;
