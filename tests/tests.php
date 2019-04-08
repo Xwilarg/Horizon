@@ -10,6 +10,8 @@
             PHPUnit\Framework\Assert::assertNotNull($elem, "Azur Lane, missing data for " . $name);
         }
     }
-    CheckShipExist("Fumizuki");
-    CheckShipExist("Akagi");
+    $arr = array("Fumizuki", "Akagi", "Ryuujou", "Kisaragi", "Akatsuki", "I-19", "Bismarck", "Ark Royal", "Akashi", "Zuikaku"); // We try with a lot of random ships 
+    foreach ($arr as $elem) {
+        CheckShipExist($elem);
+    }
 ?>
