@@ -25,11 +25,11 @@ class ShipInfo
         preg_match('/https:\/\/vignette\.wikia\.nocookie\.net\/kancolle\/images\/[^\/]+\/[^\/]+\/' . $kancolleName . '-Library\.ogg/', $kancolleMain, $matches);
         $kancolleAudio = $matches[0]; // Character intro voiceline
         // English description is right after the URL
-        $kancolleText =  explode('</td>',
-                        explode('class="shipquote-en">',
-                            explode($matches[0], $kancolleMain)[1]
-                        )[1]
-                    )[0]; // Character intro text
+        $kancolleText = explode('</td>',
+                            explode('class="shipquote-en">',
+                                explode($matches[0], $kancolleMain)[1]
+                            )[1]
+                        )[0]; // Character intro text
         return(array($kancolleImage, $kancolleAudio, $kancolleText));
     }
 
@@ -41,9 +41,15 @@ class ShipInfo
         $azurLane = file_get_contents($url, false, $context);
         preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $azurName . '.png)/', $azurLane, $matches);
         $azurLaneImage = "https://azurlane.koumakan.jp" . $matches[1]; // Character image
-        preg_match('/<td><a href="([^"]+)"[^>]+>Play<\/a>\n<\/td>\n<td> Self Introduction\n<\/td>\n<td>[^<]+<\/td>\n<td>([^\n]+)/', $azurLane, $matches);
-        $azurLaneAudio = $matches[1]; // Character intro voiceline
-        $azurLaneText = $matches[2]; // Character intro text
+        preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $azurName . '_SelfIntroJP\.ogg/', $azurLane, $matches);
+        $azurLaneAudio = $matches[0]; // Character intro voiceline
+        $azurLaneText = explode('</td>',
+                            explode('<td>',
+                                explode('Self Introduction',
+                                    explode($matches[0], $azurLane)[1]
+                                )[1]
+                            )[2]
+                        )[0]; // Character intro text
         return(array($azurLaneImage, $azurLaneAudio, $azurLaneText));
     }
 }
