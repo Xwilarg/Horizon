@@ -10,6 +10,11 @@ class ShipInfo
         ]);
     }
 
+    public static function GetAllShips() {
+        $context = ShipInfo::GetContext();
+        $content = file_get_contents("https://kancolle.fandom.com/wiki/Ship?action=raw", false, $context);
+    }
+
     public static function GetKancolleInfo($name) {
         $context = ShipInfo::GetContext();
         // base URL is the character page in the Wikia, url is to the gallery
