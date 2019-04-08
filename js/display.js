@@ -11,5 +11,5 @@ http.onreadystatechange = function() {
     }
 }
 const urlParams = new URLSearchParams(window.location.search);
-http.open("GET", "php/shipInfo.php?name=" + urlParams.get('shipName'), true);
+http.open("GET", "php/searchShip.php?name=" + urlParams.get('shipName'), true);
 http.send();
