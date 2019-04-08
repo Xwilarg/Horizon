@@ -16,7 +16,7 @@ class ShipInfo
         $json = json_decode(file_get_contents("https://kancolle.wikia.com/api/v1/Search/List?query=" . urlencode($name) . "&limit=1", false, $context));
         $baseUrl = $json->items[0]->url;
         $url = $baseUrl . "/Gallery";
-        $kancolleName = $json->items[0]->title;
+        $kancolleName = str_replace(" ", "_", $json->items[0]->title);
         $kancolle = file_get_contents($url, false, $context);
         preg_match_all('/img src="([^"]+)"/', $kancolle, $matches);
         $kancolleImage = $matches[1][1]; // Character image
