@@ -24,10 +24,17 @@ input[type=submit] {
     transform: translateY(-100%);
 }
 
-#autocomplete-elem {
+div {
     border: 1px transparent;
     padding: 10px;
     width: 400%;
-    background-color: #f1f1f1;
     transform: translateX(-50%);
+}
+
+#autocomplete-elem {
+    background-color: #f1f1f1;
+}
+
+#autocomplete-elem-selected {
+    background-color: #d1d1d1;
 }

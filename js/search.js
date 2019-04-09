@@ -10,21 +10,55 @@ const urlParams = new URLSearchParams(window.location.search);
 http.open("GET", "php/getAllShips.php", true);
 http.send();
 
+var currSelected = -1;
+
+function displayAutocomplete() {
+    let value = document.getElementById("input").value.toLowerCase();
+    if (value == "")
+        document.getElementById("autocomplete-all").innerHTML = '';
+    else {
+        let res = "";
+        let index = 0;
+        json.forEach(elem => {
+            if (index < 5 && elem.toLowerCase().startsWith(value)) {
+                if (index === currSelected)
+                    res += '<div id="autocomplete-elem-selected">' + elem + '</div>';
+                else
+                    res += '<div id="autocomplete-elem">' + elem + '</div>';
+                index++;
+            }
+        });
+        document.getElementById("autocomplete-all").innerHTML = res;
+    }
+}
+
 document.getElementById("input").addEventListener("input", function(e) {
     if (json !== null) {
-        let value = document.getElementById("input").value.toLowerCase();
-        if (value == "")
-            document.getElementById("autocomplete-all").innerHTML = '';
-        else {
-            let res = "";
-            let max = 5;
-            json.forEach(elem => {
-                if (max > 0 && elem.toLowerCase().startsWith(value)) {
-                    res += '<div id="autocomplete-elem">' + elem + '</div>';
-                    max--;
-                }
-            });
-            document.getElementById("autocomplete-all").innerHTML = res;
+        currSelected = -1;
+        displayAutocomplete();
+    }
+});
+
+document.getElementById("input").addEventListener("keydown", function(e) {
+    if (json !== null) {
+        if (e.keyCode == 13) { // Enter
+
+        }
+        else if (e.keyCode == 27) { // Escape
+            currSelected = -1;
+            displayAutocomplete();
+        }
+        else if (e.keyCode == 38) { // Up
+            currSelected--;
+            if (currSelected < 0)
+                currSelected = 0;
+            displayAutocomplete();
+        }
+        else if (e.keyCode == 40) { // Down
+            currSelected++;
+            if (currSelected > 4)
+                currSelected = 4;
+            displayAutocomplete();
         }
     }
 });
