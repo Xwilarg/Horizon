@@ -4,12 +4,15 @@
         <title>Horizon</title>
         <link rel="stylesheet" type="text/css" href="css/index.css"/>
         <meta property="og:title" content="Horizon"/>
-        <script src="js/search.js"></script>
     </head>
     <body>
-        <form action="display.html">
-            <input type="text" name="shipName" placeholder="Ship name"/>
-            <input type="submit" value="Ok"/>
+        <form autocomplete="off" action="display.html">
+            <div id="autocomplete">
+                <input type="text" id="input" name="shipName" placeholder="Ship name"/>
+                <nav id="autocomplete-all">
+                </nav>
+            </div>
         </form>
     </body>
+    <script src="js/search.js"></script>
 </html>
