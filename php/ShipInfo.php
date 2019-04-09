@@ -32,6 +32,13 @@ class ShipInfo
                 }
             }
         }
+        $content = file_get_contents("https://azurlane.koumakan.jp/List_of_Ships", false, $context);
+        preg_match_all('/\[\\\"Name\\\"\] = [^"]+"([^\"]+)/', $content, $matches); // Backslash aren't properly detected, I don't know why
+        foreach ($matches[1] as $elem) {
+            $e = substr($elem, 0, strlen($elem) - 1);
+            if (substr($e, strlen($e) - 3, 3) !== "Kai" && !in_array($e, $arr))
+                array_push($arr, $e);
+        }
         return ($arr);
     }
 
