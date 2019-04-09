@@ -12,7 +12,27 @@ class ShipInfo
 
     public static function GetAllShips() {
         $context = ShipInfo::GetContext();
-        $content = file_get_contents("https://kancolle.fandom.com/wiki/Ship?action=raw", false, $context);
+        $content =  explode("List of destroyers",
+                        explode("Ship Type Identification",
+                            file_get_contents("https://kancolle.fandom.com/wiki/Ship?action=raw", false, $context)
+                        )[0]
+                    )[1];
+        preg_match_all('/\[\[([^\]]+)\]\]/', $content, $matches);
+        $arr = array();
+        foreach ($matches[1] as $elem) {
+            if (substr($elem, 0, 7) !== "List of" && substr($elem, 0, 9) !== "Auxiliary") {
+                // Some ships are in this format: [[U-511|U-511/Ro-500]]
+                // So we remove the second "U-511" to pick only Ro-500
+                foreach (explode("|", $elem) as $e) {
+                    if (strpos($e, "/") !== false) {
+                        array_push($arr, explode("/", $elem)[1]);
+                    } else {
+                        array_push($arr, $e);
+                    }
+                }
+            }
+        }
+        return ($arr);
     }
 
     public static function GetKancolleInfo($name) {
