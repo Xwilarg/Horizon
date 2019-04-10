@@ -42,3 +42,7 @@ div {
 game {
     float: right;
 }
+
+#helpImage {
+    transform: translateY(-5px);
+}

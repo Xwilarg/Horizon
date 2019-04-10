@@ -33,7 +33,7 @@ function addAutocomplete(name, strongName, isKancolle, isAzurLane, isSelected) {
         res = '<div id="autocomplete-elem-selected"';
     else
         res = '<div id="autocomplete-elem"';
-    res += 'onclick="selectMouse(\'' + name + '\')">' + strongName + '<game>' + ((isKancolle) ? ('KC') : ('')) + ((isAzurLane) ? ('AL') : ('')) + '</game></div>';
+    res += 'onclick="selectMouse(\'' + name + '\')">' + strongName + '<game>' + ((isKancolle) ? ('<img id="helpImage" width="30" height="30" alt="KanColleLogo" src="img/KanColle.png">') : ('')) + ((isAzurLane) ? ('<img id="helpImage" width="30" height="30" alt="AzurLaneLogo" src="img/AzurLane.png">') : ('')) + '</game></div>';
     return res;
 }
 
