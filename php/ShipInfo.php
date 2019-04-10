@@ -80,9 +80,7 @@ class ShipInfo
         preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $azurName . '_SelfIntroJP\.ogg/', $azurLane, $matches);
         $azurLaneAudio = $matches[0]; // Character intro voiceline
         $library =  explode('<td>',
-                        explode('Self Introduction',
-                            explode($matches[0], $azurLane)[1]
-                        )[1]
+                        end(explode('Self Introduction', $azurLane))
                     );
         $azurLaneJp = explode('</td>', $library[1])[0];
         $azurLaneEn = explode('</td>', $library[2])[0];
