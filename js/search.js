@@ -98,13 +98,15 @@ document.getElementById("input").addEventListener("keydown", function(e) {
             currSelected--;
             if (currSelected < 0)
                 currSelected = 0;
-            displayAutocomplete();
+            else
+                displayAutocomplete();
         }
         else if (e.keyCode == 40) { // Down
             currSelected++;
             if (currSelected >= max)
                 currSelected = max - 1;
-            displayAutocomplete();
+            else
+                displayAutocomplete();
         }
     }
 });
