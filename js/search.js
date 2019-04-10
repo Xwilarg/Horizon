@@ -11,6 +11,8 @@ http.open("GET", "php/getAllShips.php", true);
 http.send();
 
 var currSelected = -1;
+var max = 5;
+var allElems;
 
 function displayAutocomplete() {
     let value = document.getElementById("input").value.toLowerCase();
@@ -19,6 +21,7 @@ function displayAutocomplete() {
     else {
         let res = "";
         let index = 0;
+        allElems = []
         json.forEach(elem => {
             if (index < 5 && elem.toLowerCase().startsWith(value)) {
                 if (index === currSelected)
@@ -26,8 +29,10 @@ function displayAutocomplete() {
                 else
                     res += '<div id="autocomplete-elem">' + elem + '</div>';
                 index++;
+                allElems.push(elem);
             }
         });
+        max = index;
         document.getElementById("autocomplete-all").innerHTML = res;
     }
 }
@@ -42,7 +47,10 @@ document.getElementById("input").addEventListener("input", function(e) {
 document.getElementById("input").addEventListener("keydown", function(e) {
     if (json !== null) {
         if (e.keyCode == 13) { // Enter
-
+            if (currSelected == -1)
+                e.preventDefault();
+            else
+                document.getElementById("input").value = allElems[currSelected];
         }
         else if (e.keyCode == 27) { // Escape
             currSelected = -1;
@@ -56,8 +64,8 @@ document.getElementById("input").addEventListener("keydown", function(e) {
         }
         else if (e.keyCode == 40) { // Down
             currSelected++;
-            if (currSelected > 4)
-                currSelected = 4;
+            if (currSelected > max)
+                currSelected = max;
             displayAutocomplete();
         }
     }
