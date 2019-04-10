@@ -6,8 +6,10 @@ http.onreadystatechange = function() {
         document.getElementById("imageAzurLane").innerHTML = '<img src="' + json[1] + '" width="300"/>';
         document.getElementById("audioIntroKancolle").innerHTML = '<audio controls src="' + json[2] + '"></audio>';
         document.getElementById("audioIntroAzurLane").innerHTML = '<audio controls src="' + json[3] + '"></audio>';
-        document.getElementById("textIntroKancolle").innerHTML = json[4];
-        document.getElementById("textIntroAzurLane").innerHTML = json[5];
+        document.getElementById("textIntroKancolleJp").innerHTML = json[4];
+        document.getElementById("textIntroAzurLaneJp").innerHTML = json[5];
+        document.getElementById("textIntroKancolleEn").innerHTML = json[6];
+        document.getElementById("textIntroAzurLaneEn").innerHTML = json[7];
     }
 }
 const urlParams = new URLSearchParams(window.location.search);

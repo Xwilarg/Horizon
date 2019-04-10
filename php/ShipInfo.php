@@ -62,13 +62,11 @@ class ShipInfo
         // Get URL to audio file
         preg_match('/https:\/\/vignette\.wikia\.nocookie\.net\/kancolle\/images\/[^\/]+\/[^\/]+\/' . $kancolleName . '-Library\.ogg/', $kancolleMain, $matches);
         $kancolleAudio = $matches[0]; // Character intro voiceline
-        // English description is right after the URL
-        $kancolleText = explode('</td>',
-                            explode('class="shipquote-en">',
-                                explode($matches[0], $kancolleMain)[1]
-                            )[1]
-                        )[0]; // Character intro text
-        return(array($kancolleImage, $kancolleAudio, $kancolleText));
+        // Description is right after the URL
+        $library = explode($matches[0], $kancolleMain)[1];
+        $kancolleJp = explode('</td>', explode('class="shipquote-ja">', $library)[1])[0];
+        $kancolleEn = explode('</td>', explode('class="shipquote-en">', $library)[1])[0];
+        return(array($kancolleImage, $kancolleAudio, $kancolleJp, $kancolleEn));
     }
 
     public static function GetAzurLaneInfo($name) {
@@ -81,14 +79,14 @@ class ShipInfo
         $azurLaneImage = "https://azurlane.koumakan.jp" . $matches[1]; // Character image
         preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $azurName . '_SelfIntroJP\.ogg/', $azurLane, $matches);
         $azurLaneAudio = $matches[0]; // Character intro voiceline
-        $azurLaneText = explode('</td>',
-                            explode('<td>',
-                                explode('Self Introduction',
-                                    explode($matches[0], $azurLane)[1]
-                                )[1]
-                            )[2]
-                        )[0]; // Character intro text
-        return(array($azurLaneImage, $azurLaneAudio, $azurLaneText));
+        $library =  explode('<td>',
+                        explode('Self Introduction',
+                            explode($matches[0], $azurLane)[1]
+                        )[1]
+                    );
+        $azurLaneJp = explode('</td>', $library[1])[0];
+        $azurLaneEn = explode('</td>', $library[2])[0];
+        return(array($azurLaneImage, $azurLaneAudio, $azurLaneJp, $azurLaneEn));
     }
 }
 ?>
