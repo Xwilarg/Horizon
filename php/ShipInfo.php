@@ -48,6 +48,10 @@ class ShipInfo
         return ($arr);
     }
 
+    private static function RemoveUnwantedHtml($html) {
+        return preg_replace("/<a [^>]+>([^<]+)+<\/a>/", "$1", $html);
+    }
+
     public static function GetKancolleInfo($name) {
         $context = ShipInfo::GetContext();
         // base URL is the character page in the Wikia, url is to the gallery
@@ -64,8 +68,8 @@ class ShipInfo
         $kancolleAudio = $matches[0]; // Character intro voiceline
         // Description is right after the URL
         $library = explode($matches[0], $kancolleMain)[1];
-        $kancolleJp = explode('</td>', explode('class="shipquote-ja">', $library)[1])[0];
-        $kancolleEn = explode('</td>', explode('class="shipquote-en">', $library)[1])[0];
+        $kancolleJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', explode('class="shipquote-ja">', $library)[1])[0]);
+        $kancolleEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', explode('class="shipquote-en">', $library)[1])[0]);
         return(array($kancolleImage, $kancolleAudio, $kancolleJp, $kancolleEn));
     }
 
@@ -82,8 +86,8 @@ class ShipInfo
         $library =  explode('<td>',
                         end(explode('Self Introduction', $azurLane))
                     );
-        $azurLaneJp = explode('</td>', $library[1])[0];
-        $azurLaneEn = explode('</td>', $library[2])[0];
+        $azurLaneJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', $library[1])[0]);
+        $azurLaneEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', $library[2])[0]);
         return(array($azurLaneImage, $azurLaneAudio, $azurLaneJp, $azurLaneEn));
     }
 }
