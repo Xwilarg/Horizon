@@ -1,3 +1,7 @@
+let shipName = new URLSearchParams(window.location.search).get('shipName');
+if (shipName !== "")
+    document.getElementById('title').innerHTML = shipName;
+
 let http = new XMLHttpRequest();
 http.onreadystatechange = function() {
     if (this.readyState === 4 && this.status === 200) {
@@ -12,6 +16,5 @@ http.onreadystatechange = function() {
         document.getElementById("textIntroAzurLaneEn").innerHTML = json[7];
     }
 }
-const urlParams = new URLSearchParams(window.location.search);
-http.open("GET", "php/searchShip.php?name=" + urlParams.get('shipName'), true);
+http.open("GET", "php/searchShip.php?name=" + shipName, true);
 http.send();
