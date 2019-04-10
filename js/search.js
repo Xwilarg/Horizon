@@ -11,7 +11,7 @@ http.open("GET", "php/getAllShips.php", true);
 http.send();
 
 var currSelected = -1;
-var max = 5;
+var max = 0;
 var allElems;
 
 function selectMouse(name) {
@@ -21,8 +21,10 @@ function selectMouse(name) {
 
 function displayAutocomplete() {
     let value = document.getElementById("input").value.toLowerCase();
-    if (value == "")
+    if (value == "") {
+        max = 0;
         document.getElementById("autocomplete-all").innerHTML = '';
+    }
     else {
         let res = "";
         let index = 0;
@@ -53,8 +55,12 @@ document.getElementById("input").addEventListener("input", function(e) {
 document.getElementById("input").addEventListener("keydown", function(e) {
     if (json !== null) {
         if (e.keyCode == 13) { // Enter
-            if (currSelected == -1)
-                e.preventDefault();
+            if (currSelected == -1) {
+                if (max == 0)
+                    e.preventDefault();
+                else
+                    document.getElementById("input").value = allElems[0];
+            }
             else
                 document.getElementById("input").value = allElems[currSelected];
         }
@@ -70,8 +76,8 @@ document.getElementById("input").addEventListener("keydown", function(e) {
         }
         else if (e.keyCode == 40) { // Down
             currSelected++;
-            if (currSelected > max)
-                currSelected = max;
+            if (currSelected >= max)
+                currSelected = max - 1;
             displayAutocomplete();
         }
     }
