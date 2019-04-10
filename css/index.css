@@ -38,3 +38,7 @@ div {
 #autocomplete-elem-selected {
     background-color: #d1d1d1;
 }
+
+game {
+    float: right;
+}
