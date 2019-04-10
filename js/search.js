@@ -14,6 +14,11 @@ var currSelected = -1;
 var max = 5;
 var allElems;
 
+function selectMouse(name) {
+    document.getElementById("input").value = name;
+    document.getElementById("form").submit();
+}
+
 function displayAutocomplete() {
     let value = document.getElementById("input").value.toLowerCase();
     if (value == "")
@@ -25,9 +30,10 @@ function displayAutocomplete() {
         json.forEach(elem => {
             if (index < 5 && elem.toLowerCase().startsWith(value)) {
                 if (index === currSelected)
-                    res += '<div id="autocomplete-elem-selected">' + elem + '</div>';
+                    res += '<div id="autocomplete-elem-selected"';
                 else
-                    res += '<div id="autocomplete-elem">' + elem + '</div>';
+                    res += '<div id="autocomplete-elem"';
+                res += 'onclick="selectMouse(\'' + elem + '\')">' + elem + '</div>';
                 index++;
                 allElems.push(elem);
             }
