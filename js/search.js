@@ -6,7 +6,6 @@ http.onreadystatechange = function() {
         json = JSON.parse(this.responseText);
     }
 }
-const urlParams = new URLSearchParams(window.location.search);
 http.open("GET", "php/getAllShips.php", true);
 http.send();
 
@@ -19,6 +18,15 @@ function selectMouse(name) {
     document.getElementById("form").submit();
 }
 
+function addAutocomplete(name, strongName, isSelected) {
+    if (isSelected)
+        res = '<div id="autocomplete-elem-selected"';
+    else
+        res = '<div id="autocomplete-elem"';
+    res += 'onclick="selectMouse(\'' + name + '\')">' + strongName + '</div>';
+    return res;
+}
+
 function displayAutocomplete() {
     let value = document.getElementById("input").value.toLowerCase();
     if (value == "") {
@@ -28,24 +36,42 @@ function displayAutocomplete() {
     else {
         let res = "";
         let index = 0;
+        let valLength = value.length;
         allElems = []
-        json.forEach(elem => {
-            if (index < 5 && elem.toLowerCase().startsWith(value)) {
-                if (index === currSelected)
-                    res += '<div id="autocomplete-elem-selected"';
-                else
-                    res += '<div id="autocomplete-elem"';
-                res += 'onclick="selectMouse(\'' + elem + '\')">' + elem + '</div>';
-                index++;
-                allElems.push(elem);
+        validElems = {}
+        json.forEach(elem => { // Prepare autocomplete by taking all shipname that are contained in the user input
+            let lowerElem = elem.toLowerCase();
+            if (lowerElem.includes(value)) {
+                // We calculate where to place <strong></strong> so the user can easily see wha match his input
+                let startIndex = lowerElem.indexOf(value);
+                let endBoldLength = startIndex + valLength;
+                let finalValue = elem.substr(0, startIndex) + "<strong>" + elem.substr(startIndex, valLength) + "</strong>" + elem.substr(endBoldLength, elem.length - endBoldLength);
+                validElems[elem] = finalValue;
             }
         });
+        for (let elem in validElems) { // At first we display all names at start with the user input
+            if (index < 5 && elem.toLowerCase().startsWith(value)) {
+                res += addAutocomplete(elem, validElems[elem], index === currSelected)
+                index++;
+                allElems.push(elem);
+                delete validElems[elem];
+            }
+        }
+        if (index < 5) { // If there is still some room left, we display the ship that have match in the middle
+            for (let elem in validElems) {
+                if (index < 5) {
+                    res += addAutocomplete(elem, validElems[elem], index === currSelected)
+                    index++;
+                    allElems.push(elem);
+                }
+            }
+        }
         max = index;
         document.getElementById("autocomplete-all").innerHTML = res;
     }
 }
 
-document.getElementById("input").addEventListener("input", function(e) {
+document.getElementById("input").addEventListener("input", function() {
     if (json !== null) {
         currSelected = -1;
         displayAutocomplete();
