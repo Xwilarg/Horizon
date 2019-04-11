@@ -28,16 +28,21 @@ function selectMouse(name) {
     document.getElementById("form").submit();
 }
 
-function addAutocomplete(name, strongName, isKancolle, isAzurLane, isSelected) {
+function addAutocomplete(name, strongName, refName, isKancolle, isAzurLane, isSelected) {
     if (isSelected)
         res = '<div id="autocomplete-elem-selected"';
     else
         res = '<div id="autocomplete-elem"';
-    res += 'onclick="selectMouse(\'' + name + '\')">' + strongName + '<game>' + ((isKancolle) ? ('<img id="helpImage" width="30" height="30" alt="KanColleLogo" src="img/KanColle.png">') : ('')) + ((isAzurLane) ? ('<img id="helpImage" width="30" height="30" alt="AzurLaneLogo" src="img/AzurLane.png">') : ('')) + '</game></div>';
+    res += ' onclick="selectMouse(\'' + refName + '\')">' + strongName + '<game>' + ((isKancolle) ? ('<img id="helpImage" width="30" height="30" alt="KanColleLogo" src="img/KanColle.png">') : ('')) + ((isAzurLane) ? ('<img id="helpImage" width="30" height="30" alt="AzurLaneLogo" src="img/AzurLane.png">') : ('')) + '</game></div>';
     return res;
 }
 
-function updateDictionary(validElems, value, elem, kancolleValue) { // kancolleValue is 1 for KanColle, 2 for AzurLane, 3 for both
+// validElems is the dictionary containing names
+// value is the user input
+// elem is the ship name to check
+// nameRef is the name to call in case of search (for example for 'Ryuuhou', you'll search 'Taigei')
+// kancolleValue is 1 for KanColle, 2 for AzurLane, 3 for both
+function updateDictionary(validElems, value, elem, nameRef, kancolleValue) {
     let valLength = value.length;
     let lowerElem = elem.toLowerCase();
     if (lowerElem.includes(value)) {
@@ -46,16 +51,16 @@ function updateDictionary(validElems, value, elem, kancolleValue) { // kancolleV
         let endBoldLength = startIndex + valLength;
         let finalValue = elem.substr(0, startIndex) + "<strong>" + elem.substr(startIndex, valLength) + "</strong>" + elem.substr(endBoldLength, elem.length - endBoldLength);
         if (validElems[elem] == undefined)
-            validElems[elem] = [ finalValue, kancolleValue ];
+            validElems[elem] = [ finalValue, nameRef, kancolleValue ];
         else
-            validElems[elem] = [ finalValue, kancolleValue + validElems[elem][1] ];
+            validElems[elem] = [ finalValue, nameRef, kancolleValue + validElems[elem][1] ];
     }
 }
 
 function addElemToAutocomplete(elem, index) {
     let dictElem = validElems[elem];
-    let kancolleValue = dictElem[1];
-    return (addAutocomplete(elem, dictElem[0], kancolleValue != 2, kancolleValue != 1, index === currSelected));
+    let kancolleValue = dictElem[2];
+    return (addAutocomplete(elem, dictElem[0], dictElem[1], kancolleValue != 2, kancolleValue != 1, index === currSelected));
 }
 
 function displayAutocomplete() {
@@ -69,10 +74,10 @@ function displayAutocomplete() {
         allElems = []
         validElems = {}
         kancolleShips.forEach(elem => { // Prepare autocomplete by taking all shipname that are contained in the user input
-            updateDictionary(validElems, value, elem, 1);
+            updateDictionary(validElems, value, elem[0], (elem.length > 1) ? (elem[1]) : (elem[0]), 1);
         });
         azurLaneShips.forEach(elem => { // Prepare autocomplete by taking all shipname that are contained in the user input
-            updateDictionary(validElems, value, elem, 2);
+            updateDictionary(validElems, value, elem[0], (elem.length > 1) ? (elem[1]) : (elem[0]), 2);
         });
         for (let elem in validElems) { // At first we display all names at start with the user input
             if (index < 5 && elem.toLowerCase().startsWith(value)) {

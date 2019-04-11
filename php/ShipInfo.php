@@ -10,6 +10,15 @@ class ShipInfo
         ]);
     }
 
+    private static function IsInArray($elem, $array) {
+        foreach ($array as $e) {
+            if ($e[0] === $elem) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static function GetAllKancolleShips() {
         $context = ShipInfo::GetContext();
         $content =  explode("List of destroyers",
@@ -23,12 +32,25 @@ class ShipInfo
             if (substr($elem, 0, 7) !== "List of" && substr($elem, 0, 9) !== "Auxiliary") {
                 // Some ships are in this format: [[U-511|U-511/Ro-500]]
                 // So we remove the second "U-511" to pick only Ro-500
-                foreach (explode("|", $elem) as $e) {
-                    if (strpos($e, "/") !== false) {
-                        array_push($arr, explode("/", $elem)[1]);
+                // We also need to pay attention because some elements are dupplicated
+                if (strpos($elem, "|") !== false) {
+                    $allName = explode("|", $elem);
+                    $refName = str_replace("'", "", $allName[0]);
+                    if (strpos($allName[1], "/") !== false) {
+                        $aliasName = explode("/", $allName[1]);
                     } else {
-                        array_push($arr, $e);
+                        $aliasName = array($allName[1]);
                     }
+                    foreach ($aliasName as $a) {
+                        if (!ShipInfo::IsInArray($a, $arr) && $a !== $refName) {
+                            array_push($arr, array(str_replace("'", "", $a), str_replace("'", "", $refName)));
+                        }
+                    }
+                    if (!ShipInfo::IsInArray($a, $refName)) {
+                        array_push($arr, array(str_replace("'", "", $refName)));
+                    }
+                } else if (!ShipInfo::IsInArray($elem, $arr)) {
+                    array_push($arr, array(str_replace("'", "", $elem)));
                 }
             }
         }
@@ -41,8 +63,9 @@ class ShipInfo
         preg_match_all('/<a href="\/[^"]+" title="([^"]+)">[0-9]+<\/a>/', $content, $matches); // Backslash aren't properly detected, I don't know why
         $arr = array();
         foreach ($matches[1] as $elem) {
-            if (!in_array($elem, $arr))
-                array_push($arr, $elem);
+            if (!ShipInfo::IsInArray($elem, $arr)) {
+                array_push($arr, array(str_replace("'", "", $elem)));
+            }
         }
         return ($arr);
     }
@@ -81,12 +104,22 @@ class ShipInfo
         preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $azurName . '.png)/', $azurLane, $matches);
         $azurLaneImage = "https://azurlane.koumakan.jp" . $matches[1]; // Character image
         preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $azurName . '_SelfIntroJP\.ogg/', $azurLane, $matches);
+        if (count($matches) === 0) {
+            preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $azurName . '_SelfIntroCN\.ogg/', $azurLane, $matches);
+        }
         $azurLaneAudio = $matches[0]; // Character intro voiceline
         $library = explode('Self Introduction', $azurLane);
-        $libraryJp =  explode('<td>', end($library));
-        $libraryEn =  explode('<td>', $library[1]);
-        $azurLaneJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', $libraryJp[1])[0]);
-        $azurLaneEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', $libraryEn[2])[0]);
+        // There is two "Self Introduction", one in chinese, one in japanese.
+        // By default we take the japanese one but if it's empty we fallback on the chinese one
+        // (this is mostly the case for ships that only are in the chinese version, like 33)
+        $libraryFirst = explode('<td>', $library[1]);
+        $librarySecond = explode('<td>', $library[2]);
+        $azurLaneJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', $librarySecond[1])[0]);
+        if (trim($azurLaneJp) === "")
+            $azurLaneJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', $libraryFirst[1])[0]);
+        $azurLaneEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', $librarySecond[2])[0]);
+        if (trim($azurLaneEn) === "")
+            $azurLaneEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', $libraryFirst[2])[0]);
         return(array($azurLaneImage, $azurLaneAudio, $azurLaneJp, $azurLaneEn));
     }
 }
