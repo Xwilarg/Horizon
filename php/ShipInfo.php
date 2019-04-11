@@ -91,6 +91,9 @@ class ShipInfo
         }
         $azurLaneAudio = $matches[0]; // Character intro voiceline
         $library = explode('Self Introduction', $azurLane);
+        // There is two "Self Introduction", one in chinese, one in japanese.
+        // By default we take the japanese one but if it's empty we fallback on the chinese one
+        // (this is mostly the case for ships that only are in the chinese version, like 33)
         $libraryFirst = explode('<td>', $library[1]);
         $librarySecond = explode('<td>', $library[2]);
         $azurLaneJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', $librarySecond[1])[0]);
