@@ -25,9 +25,12 @@ class ShipInfo
                 // So we remove the second "U-511" to pick only Ro-500
                 foreach (explode("|", $elem) as $e) {
                     if (strpos($e, "/") !== false) {
-                        array_push($arr, explode("/", $elem)[1]);
+                        $arrElem = explode("/", $elem)[1];
                     } else {
-                        array_push($arr, $e);
+                        $arrElem = $e;
+                    }
+                    if (!in_array(preg_replace("/[^A-Za-z0-9 ]/", "", $arrElem), $arr)) {
+                        array_push($arr, $arrElem);
                     }
                 }
             }
@@ -42,8 +45,9 @@ class ShipInfo
         $arr = array();
         foreach ($matches[1] as $elem) {
             $e = substr($elem, 0, strlen($elem) - 1);
-            if (substr($e, strlen($e) - 3, 3) !== "Kai" && !in_array($e, $arr))
+            if (substr($e, strlen($e) - 3, 3) !== "Kai" && !in_array(preg_replace("/[^A-Za-z0-9 ]/", "", $e), $arr)) {
                 array_push($arr, $e);
+            }
         }
         return ($arr);
     }
