@@ -30,7 +30,7 @@ class ShipInfo
                         $arrElem = $e;
                     }
                     if (!in_array(preg_replace("/[^A-Za-z0-9 ]/", "", $arrElem), $arr)) {
-                        array_push($arr, $arrElem);
+                        array_push($arr, str_replace("'", "", $arrElem));
                     }
                 }
             }
@@ -46,7 +46,7 @@ class ShipInfo
         foreach ($matches[1] as $elem) {
             $e = substr($elem, 0, strlen($elem) - 1);
             if (substr($e, strlen($e) - 3, 3) !== "Kai" && !in_array(preg_replace("/[^A-Za-z0-9 ]/", "", $e), $arr)) {
-                array_push($arr, $e);
+                array_push($arr, str_replace("'", "", $e));
             }
         }
         return ($arr);
