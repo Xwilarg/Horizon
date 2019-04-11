@@ -82,12 +82,13 @@ class ShipInfo
         preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $azurName . '.png)/', $azurLane, $matches);
         $azurLaneImage = "https://azurlane.koumakan.jp" . $matches[1]; // Character image
         preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $azurName . '_SelfIntroJP\.ogg/', $azurLane, $matches);
+        if (count($matches) === 0) {
+            preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $azurName . '_SelfIntroCN\.ogg/', $azurLane, $matches);
+        }
         $azurLaneAudio = $matches[0]; // Character intro voiceline
-        $library = explode('Self Introduction', $azurLane);
-        $libraryJp =  explode('<td>', end($library));
-        $libraryEn =  explode('<td>', $library[1]);
-        $azurLaneJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', $libraryJp[1])[0]);
-        $azurLaneEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', $libraryEn[2])[0]);
+        $library = explode('<td>', explode('Self Introduction', explode($matches[0], $azurLane)[1])[1]);
+        $azurLaneJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', $library[1])[0]);
+        $azurLaneEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', $library[2])[0]);
         return(array($azurLaneImage, $azurLaneAudio, $azurLaneJp, $azurLaneEn));
     }
 }
