@@ -38,12 +38,11 @@ class ShipInfo
     public static function GetAllAzurLaneShips() {
         $context = ShipInfo::GetContext();
         $content = file_get_contents("https://azurlane.koumakan.jp/List_of_Ships", false, $context);
-        preg_match_all('/\[\\\"Name\\\"\] = [^"]+"([^\"]+)/', $content, $matches); // Backslash aren't properly detected, I don't know why
+        preg_match_all('/<a href="\/[^"]+" title="([^"]+)">[0-9]+<\/a>/', $content, $matches); // Backslash aren't properly detected, I don't know why
         $arr = array();
         foreach ($matches[1] as $elem) {
-            $e = substr($elem, 0, strlen($elem) - 1);
-            if (substr($e, strlen($e) - 3, 3) !== "Kai" && !in_array($e, $arr))
-                array_push($arr, $e);
+            if (!in_array($elem, $arr))
+                array_push($arr, $elem);
         }
         return ($arr);
     }
