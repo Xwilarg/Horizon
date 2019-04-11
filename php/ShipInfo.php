@@ -99,13 +99,14 @@ class ShipInfo
         $context = ShipInfo::GetContext();
         // url is the character page in the wikia
         $azurName = str_replace(" ", "_", json_decode(file_get_contents("https://azurlane.koumakan.jp/w/api.php?action=opensearch&search=" . urlencode($name) . "&limit=1", false, $context))[1][0]);
-        $url = "https://azurlane.koumakan.jp/" . $azurName;
+        $encodeName = urlencode($name);
+        $url = "https://azurlane.koumakan.jp/" . $encodeName;
         $azurLane = file_get_contents($url, false, $context);
-        preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $azurName . '.png)/', $azurLane, $matches);
+        preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $encodeName . '.png)/', $azurLane, $matches);
         $azurLaneImage = "https://azurlane.koumakan.jp" . $matches[1]; // Character image
-        preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $azurName . '_SelfIntroJP\.ogg/', $azurLane, $matches);
+        preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $encodeName . '_SelfIntroJP\.ogg/', $azurLane, $matches);
         if (count($matches) === 0) {
-            preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $azurName . '_SelfIntroCN\.ogg/', $azurLane, $matches);
+            preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $encodeName . '_SelfIntroCN\.ogg/', $azurLane, $matches);
         }
         $azurLaneAudio = $matches[0]; // Character intro voiceline
         $library = explode('Self Introduction', $azurLane);

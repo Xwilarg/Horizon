@@ -35,7 +35,7 @@
         CheckAzurLaneExist($elem);
     }
 
-    $arr = array("Ryuuhou", "I-168", "Kikuzuki", "Zuihou", "Etorofu");
+    $arr = array("Taigei", "I-168", "Kikuzuki", "Zuihou", "Etorofu");
     foreach ($arr as $elem) {
         CheckKancolleExist($elem);
     }
