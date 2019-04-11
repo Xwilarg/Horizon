@@ -30,7 +30,7 @@
         CheckShipExist($elem);
     }
 
-    $arr = array("33", "Unicorn", "U-557", "Blanc", "Eldridge");
+    $arr = array("33", "Unicorn", "U-557", "Blanc", "Eldridge", "Köln");
     foreach ($arr as $elem) {
         CheckAzurLaneExist($elem);
     }
