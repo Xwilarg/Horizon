@@ -83,7 +83,7 @@ function displayAutocomplete() {
             if (index < 5 && elem.toLowerCase().startsWith(value)) {
                 res += addElemToAutocomplete(elem, index);
                 index++;
-                allElems.push(elem);
+                allElems.push(validElems[elem][1]);
                 delete validElems[elem];
             }
         }
@@ -92,7 +92,7 @@ function displayAutocomplete() {
                 if (index < 5) {
                     res += addElemToAutocomplete(elem, index);
                     index++;
-                    allElems.push(elem);
+                    allElems.push(validElems[elem][1]);
                 }
             }
         }
