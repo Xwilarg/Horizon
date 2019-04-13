@@ -42,8 +42,9 @@ class ShipInfo
                         $aliasName = array($allName[1]);
                     }
                     foreach ($aliasName as $a) {
-                        if (!ShipInfo::IsInArray($a, $arr) && $a !== $refName) {
-                            array_push($arr, array(str_replace("'", "", $a), str_replace("'", "", $refName)));
+                        $aClean = str_replace("'", "", $a);
+                        if (!ShipInfo::IsInArray($aClean, $arr) && $aClean !== $refName) {
+                            array_push($arr, array($aClean, $refName));
                         }
                     }
                     if (!ShipInfo::IsInArray($a, $refName)) {
