@@ -21,37 +21,25 @@ class ShipInfo
 
     public static function GetAllKancolleShips() {
         $context = ShipInfo::GetContext();
-        $content =  explode("List of destroyers",
-                        explode("Ship Type Identification",
-                            file_get_contents("https://kancolle.fandom.com/wiki/Ship?action=raw", false, $context)
+        $content =  explode("List_of_coastal_defense_ships_by_upgraded_maximum_stats",
+                        explode("Fleet_of_Fog",
+                            file_get_contents("https://kancolle.fandom.com/wiki/Ship", false, $context)
                         )[0]
                     )[1];
-        preg_match_all('/\[\[([^\]]+)\]\]/', $content, $matches);
+        preg_match_all('/<a href="\/wiki\/([^"]+)" title="[^"]+">[^<]+<\/a>/', $content, $matches);
         $arr = array();
         foreach ($matches[1] as $elem) {
-            if (substr($elem, 0, 7) !== "List of" && substr($elem, 0, 9) !== "Auxiliary") {
-                // Some ships are in this format: [[U-511|U-511/Ro-500]]
-                // So we remove the second "U-511" to pick only Ro-500
-                // We also need to pay attention because some elements are dupplicated
-                if (strpos($elem, "|") !== false) {
-                    $allName = explode("|", $elem);
-                    $refName = str_replace("'", "", $allName[0]);
-                    if (strpos($allName[1], "/") !== false) {
-                        $aliasName = explode("/", $allName[1]);
-                    } else {
-                        $aliasName = array($allName[1]);
+            if (substr($elem, 0, 7) !== "List_of" && substr($elem, 0, 9) !== "Category:") {
+                // Some ships are in this format: Hibiki/Verniy
+                if (strpos($elem, "/") !== false) {
+                    $names = explode("/", $elem);
+                    if (!ShipInfo::IsInArray($names[1], $arr)) {
+                        array_push($arr, array(str_replace("'", "", $names[1]), str_replace("'", "", $names[0])));
                     }
-                    foreach ($aliasName as $a) {
-                        $aClean = str_replace("'", "", $a);
-                        if (!ShipInfo::IsInArray($aClean, $arr) && $aClean !== $refName) {
-                            array_push($arr, array($aClean, $refName));
-                        }
+                } else {
+                    if (!ShipInfo::IsInArray($elem, $arr)) {
+                        array_push($arr, array(str_replace("'", "", $elem)));
                     }
-                    if (!ShipInfo::IsInArray($a, $refName)) {
-                        array_push($arr, array(str_replace("'", "", $refName)));
-                    }
-                } else if (!ShipInfo::IsInArray($elem, $arr)) {
-                    array_push($arr, array(str_replace("'", "", $elem)));
                 }
             }
         }
