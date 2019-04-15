@@ -71,7 +71,7 @@ class ShipInfo
     public static function GetKancolleInfo($name) {
         $context = ShipInfo::GetContext();
         // base URL is the character page in the Wikia, url is to the gallery
-        $json = json_decode(file_get_contents("https://kancolle.wikia.com/api/v1/Search/List?query=" . urlencode($name) . "&limit=1", false, $context));
+        $json = json_decode(file_get_contents("https://kancolle.fandom.com/api/v1/Search/List?query=" . urlencode($name) . "&limit=1", false, $context));
         $baseUrl = $json->items[0]->url;
         $url = $baseUrl . "/Gallery";
         $kancolleName = str_replace(" ", "_", $json->items[0]->title);
