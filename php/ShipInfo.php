@@ -26,19 +26,24 @@ class ShipInfo
                             file_get_contents("https://kancolle.fandom.com/wiki/Ship", false, $context)
                         )[0]
                     )[1];
-        preg_match_all('/<a href="\/wiki\/([^"]+)" title="[^"]+">[^<]+<\/a>/', $content, $matches);
+        preg_match_all('/<a href="\/wiki\/([^"]+)" title="[^"]+">([^<]+)<\/a>/', $content, $matches);
         $arr = array();
-        foreach ($matches[1] as $elem) {
-            if (substr($elem, 0, 7) !== "List_of" && substr($elem, 0, 9) !== "Category:") {
+        for ($i = 0; $i < count($matches[0]); $i++) {
+            $shipCmp = $matches[1][$i];
+            if (substr($shipCmp, 0, 7) !== "List_of" && substr($shipCmp, 0, 9) !== "Category:") {
+                $shipName = $matches[2][$i];
                 // Some ships are in this format: Hibiki/Verniy
-                if (strpos($elem, "/") !== false) {
-                    $names = explode("/", $elem);
+                if (strpos($shipName, "/") !== false) {
+                    $names = explode("/", $shipName);
                     if (!ShipInfo::IsInArray($names[1], $arr)) {
                         array_push($arr, array(str_replace("'", "", $names[1]), str_replace("'", "", $names[0])));
                     }
+                    if (!ShipInfo::IsInArray($names[0], $arr)) {
+                        array_push($arr, array(str_replace("'", "", $names[0])));
+                    }
                 } else {
-                    if (!ShipInfo::IsInArray($elem, $arr)) {
-                        array_push($arr, array(str_replace("'", "", $elem)));
+                    if (!ShipInfo::IsInArray($shipName, $arr)) {
+                        array_push($arr, array(str_replace("'", "", $shipName)));
                     }
                 }
             }
