@@ -9,3 +9,13 @@ td, th {
     padding: 8px;
     width: 50%;
 }
+
+img {
+    height: 500px;
+    width: auto;
+}
+
+footer img {
+    height: 100%;
+    width: 100%;
+}
