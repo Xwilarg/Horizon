@@ -102,7 +102,7 @@ class ShipInfo
         if (!ShipInfo::CompareRawString($azurName, $name))
             return (array(null, null, null, null));
         $encodeName = urlencode($name);
-        $encodeName = str_replace("+", "_", $encodeName);
+        $encodeName = ucfirst(str_replace("+", "_", $encodeName));
         $url = "https://azurlane.koumakan.jp/" . $encodeName;
         $azurLane = file_get_contents($url, false, $context);
         preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $encodeName . '.png)/', $azurLane, $matches);
