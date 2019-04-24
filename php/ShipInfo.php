@@ -68,6 +68,10 @@ class ShipInfo
         return preg_replace("/<a [^>]+>([^<]+)+<\/a>/", "$1", $html);
     }
 
+    private static function CompareRawString($s1, $s2) {
+        return strtolower(preg_replace("/[^A-Za-z0-9]/", '', $s1)) === strtolower(preg_replace("/[^A-Za-z0-9]/", '', $s2));
+    }
+
     public static function GetKancolleInfo($name) {
         $context = ShipInfo::GetContext();
         // base URL is the character page in the Wikia, url is to the gallery
@@ -75,6 +79,8 @@ class ShipInfo
         $baseUrl = $json->items[0]->url;
         $url = $baseUrl . "/Gallery";
         $kancolleName = str_replace(" ", "_", $json->items[0]->title);
+        if (!ShipInfo::CompareRawString($kancolleName, $name))
+            return (array(null, null, null, null));
         $kancolle = file_get_contents($url, false, $context);
         preg_match_all('/img src="([^"]+)"/', $kancolle, $matches);
         $kancolleImage = $matches[1][1]; // Character image
@@ -93,8 +99,10 @@ class ShipInfo
         $context = ShipInfo::GetContext();
         // url is the character page in the wikia
         $azurName = json_decode(file_get_contents("https://azurlane.koumakan.jp/w/api.php?action=opensearch&search=" . urlencode($name) . "&limit=1", false, $context))[1][0];
+        if (!ShipInfo::CompareRawString($azurName, $name))
+            return (array(null, null, null, null));
         $encodeName = urlencode($name);
-        $encodeName = str_replace("+", "_", $encodeName);
+        $encodeName = ucfirst(str_replace("+", "_", $encodeName));
         $url = "https://azurlane.koumakan.jp/" . $encodeName;
         $azurLane = file_get_contents($url, false, $context);
         preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $encodeName . '.png)/', $azurLane, $matches);
