@@ -33,7 +33,6 @@ function addAutocomplete(strongName, refName, isKancolle, isAzurLane, isSelected
         res = '<div id="autocomplete-elem-selected"';
     else
         res = '<div id="autocomplete-elem"';
-    console.log(refName);
     res += ' onclick="selectMouse(\'' + refName + '\')">' + strongName + '<game>' + ((isKancolle) ? ('<img id="helpImage" width="30" height="30" alt="KanColleLogo" src="img/KanColle.png">') : ('')) + ((isAzurLane) ? ('<img id="helpImage" width="30" height="30" alt="AzurLaneLogo" src="img/AzurLane.png">') : ('')) + '</game></div>';
     return res;
 }
@@ -65,7 +64,7 @@ function addElemToAutocomplete(elem, index) {
 }
 
 function displayAutocomplete() {
-    let value = document.getElementById("input").value.toLowerCase();
+    let value = document.getElementById("input").value.toLowerCase().replace("'", "&#39;");
     if (value == "") {
         max = 0;
         document.getElementById("autocomplete-all").innerHTML = '';
