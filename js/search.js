@@ -28,11 +28,12 @@ function selectMouse(name) {
     document.getElementById("form").submit();
 }
 
-function addAutocomplete(name, strongName, refName, isKancolle, isAzurLane, isSelected) {
+function addAutocomplete(strongName, refName, isKancolle, isAzurLane, isSelected) {
     if (isSelected)
         res = '<div id="autocomplete-elem-selected"';
     else
         res = '<div id="autocomplete-elem"';
+    console.log(refName);
     res += ' onclick="selectMouse(\'' + refName + '\')">' + strongName + '<game>' + ((isKancolle) ? ('<img id="helpImage" width="30" height="30" alt="KanColleLogo" src="img/KanColle.png">') : ('')) + ((isAzurLane) ? ('<img id="helpImage" width="30" height="30" alt="AzurLaneLogo" src="img/AzurLane.png">') : ('')) + '</game></div>';
     return res;
 }
@@ -51,16 +52,16 @@ function updateDictionary(validElems, value, elem, nameRef, kancolleValue) {
         let endBoldLength = startIndex + valLength;
         let finalValue = elem.substr(0, startIndex) + "<strong>" + elem.substr(startIndex, valLength) + "</strong>" + elem.substr(endBoldLength, elem.length - endBoldLength);
         if (validElems[elem] == undefined)
-            validElems[elem] = [ finalValue, nameRef, kancolleValue ];
+            validElems[elem] = [ finalValue, nameRef.replace("&#39;", "%27"), kancolleValue ];
         else
-            validElems[elem] = [ finalValue, nameRef, kancolleValue + validElems[elem][1] ];
+            validElems[elem] = [ finalValue, nameRef.replace("&#39;", "%27"), kancolleValue + validElems[elem][1] ];
     }
 }
 
 function addElemToAutocomplete(elem, index) {
     let dictElem = validElems[elem];
     let kancolleValue = dictElem[2];
-    return (addAutocomplete(elem, dictElem[0], dictElem[1], kancolleValue != 2, kancolleValue != 1, index === currSelected));
+    return (addAutocomplete(dictElem[0], dictElem[1], kancolleValue != 2, kancolleValue != 1, index === currSelected));
 }
 
 function displayAutocomplete() {
