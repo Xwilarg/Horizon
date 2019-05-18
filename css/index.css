@@ -18,12 +18,6 @@ input[type=text] {
     transform: translateX(-50%);
 }
 
-input[type=submit] {
-    width: 50px;
-    background-color: #4eB9d4;
-    transform: translateY(-100%);
-}
-
 div {
     border: 1px transparent;
     padding: 10px;
