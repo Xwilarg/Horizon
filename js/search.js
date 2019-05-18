@@ -28,7 +28,7 @@ function selectMouse(name) {
     document.getElementById("form").submit();
 }
 
-function addAutocomplete(name, strongName, refName, isKancolle, isAzurLane, isSelected) {
+function addAutocomplete(strongName, refName, isKancolle, isAzurLane, isSelected) {
     if (isSelected)
         res = '<div id="autocomplete-elem-selected"';
     else
@@ -51,20 +51,20 @@ function updateDictionary(validElems, value, elem, nameRef, kancolleValue) {
         let endBoldLength = startIndex + valLength;
         let finalValue = elem.substr(0, startIndex) + "<strong>" + elem.substr(startIndex, valLength) + "</strong>" + elem.substr(endBoldLength, elem.length - endBoldLength);
         if (validElems[elem] == undefined)
-            validElems[elem] = [ finalValue, nameRef, kancolleValue ];
+            validElems[elem] = [ finalValue, nameRef.replace("&#39;", "%27"), kancolleValue ];
         else
-            validElems[elem] = [ finalValue, nameRef, kancolleValue + validElems[elem][1] ];
+            validElems[elem] = [ finalValue, nameRef.replace("&#39;", "%27"), kancolleValue + validElems[elem][1] ];
     }
 }
 
 function addElemToAutocomplete(elem, index) {
     let dictElem = validElems[elem];
     let kancolleValue = dictElem[2];
-    return (addAutocomplete(elem, dictElem[0], dictElem[1], kancolleValue != 2, kancolleValue != 1, index === currSelected));
+    return (addAutocomplete(dictElem[0], dictElem[1], kancolleValue != 2, kancolleValue != 1, index === currSelected));
 }
 
 function displayAutocomplete() {
-    let value = document.getElementById("input").value.toLowerCase();
+    let value = document.getElementById("input").value.toLowerCase().replace("'", "&#39;");
     if (value == "") {
         max = 0;
         document.getElementById("autocomplete-all").innerHTML = '';
