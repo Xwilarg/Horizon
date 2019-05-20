@@ -107,6 +107,7 @@ class ShipInfo
         $azurLane = file_get_contents($url, false, $context);
         preg_match('/src="(\/w\/images\/thumb\/[^\/]+\/[^\/]+\/[^\/]+\/[0-9]+px-' . $encodeName . '.png)/', $azurLane, $matches);
         $azurLaneImage = "https://azurlane.koumakan.jp" . $matches[1]; // Character image
+        $azurLane = file_get_contents($url . "/Quotes", false, $context);
         preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $encodeName . '_SelfIntroJP\.ogg/', $azurLane, $matches);
         if (count($matches) === 0) {
             preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $encodeName . '_SelfIntroCN\.ogg/', $azurLane, $matches);
