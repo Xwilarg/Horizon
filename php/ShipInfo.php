@@ -113,18 +113,24 @@ class ShipInfo
             preg_match('/https:\/\/azurlane.koumakan.jp\/w\/images\/[^\/]+\/[^\/]+\/' . $encodeName . '_SelfIntroCN\.ogg/', $azurLane, $matches);
         }
         $azurLaneAudio = $matches[0]; // Character intro voiceline
-        $library = explode('Self Introduction', $azurLane);
+        $azurLane = file_get_contents($url . "/Quotes?action=raw", false, $context);
+        $library = explode('Server', $azurLane);
         // There is two "Self Introduction", one in chinese, one in japanese.
         // By default we take the japanese one but if it's empty we fallback on the chinese one
         // (this is mostly the case for ships that only are in the chinese version, like 33)
-        $libraryFirst = explode('<td>', $library[1]);
-        $librarySecond = explode('<td>', $library[2]);
-        $azurLaneJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', $librarySecond[1])[0]);
-        if (trim($azurLaneJp) === "")
-            $azurLaneJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', $libraryFirst[1])[0]);
-        $azurLaneEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', $librarySecond[2])[0]);
-        if (trim($azurLaneEn) === "")
-            $azurLaneEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', $libraryFirst[2])[0]);
+        $libraryCn = explode('SelfIntro = ', $library[1]);
+        $libraryJp = explode('SelfIntro = ', $library[2]);
+        $libraryTradCn = explode('SelfIntroTL = ', $library[1]);
+        $libraryTradJp = explode('SelfIntroTL = ', $library[2]);
+        $azurLaneJp = explode('|', $libraryJp[1])[0];
+        if (trim($azurLaneJp) === "") {
+            $azurLaneJp = explode('|', $libraryCn[2])[0];
+            $azurLaneEn = explode('|', $libraryTradCn[2])[0];
+        } else {
+            $azurLaneEn = explode('|', $libraryTradJp[1])[0];
+            if (trim($azurLaneEn) === "")
+                $azurLaneEn = explode('|', $libraryTradCn[2])[0];
+        }
         return(array($azurLaneImage, $azurLaneAudio, $azurLaneJp, $azurLaneEn));
     }
 }
