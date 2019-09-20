@@ -126,12 +126,12 @@ class ShipInfo
         $libraryNoteCn = explode('SelfIntroNote = ', $library[1]);
         $azurLaneJp = explode('|', $libraryJp[1])[0];
         if (trim($azurLaneJp) === "") {
-            $azurLaneJp = explode('|', $libraryCn[2])[0];
-            $azurLaneEn = explode('|', $libraryTradCn[2])[0];
+            $azurLaneJp = explode('|', $libraryCn[1])[0];
+            $azurLaneEn = explode('|', $libraryTradCn[1])[0];
         } else {
             $azurLaneEn = explode('|', $libraryTradJp[1])[0];
             if (trim($azurLaneEn) === "")
-                $azurLaneEn = explode('|', $libraryTradCn[2])[0];
+                $azurLaneEn = explode('|', $libraryTradCn[1])[0];
         }
         $azurLaneNote = explode('|', $libraryNoteCn[1])[0];
         return(array($azurLaneImage, $azurLaneAudio, $azurLaneJp, $azurLaneEn, $azurLaneNote));
