@@ -92,7 +92,8 @@ class ShipInfo
         $library = explode($matches[0], $kancolleMain)[1];
         $kancolleJp = ShipInfo::RemoveUnwantedHtml(explode('</td>', explode('class="shipquote-ja">', $library)[1])[0]);
         $kancolleEn = ShipInfo::RemoveUnwantedHtml(explode('</td>', explode('class="shipquote-en">', $library)[1])[0]);
-        return(array($kancolleImage, $kancolleAudio, $kancolleJp, $kancolleEn));
+        $kancolleNote = ShipInfo::RemoveUnwantedHtml(explode('</td>', explode('<td>', explode('class="shipquote-en">', $library)[1])[1])[0]);
+        return(array($kancolleImage, $kancolleAudio, $kancolleJp, $kancolleEn, $kancolleNote));
     }
 
     public static function GetAzurLaneInfo($name) {
@@ -122,6 +123,7 @@ class ShipInfo
         $libraryJp = explode('SelfIntro = ', $library[2]);
         $libraryTradCn = explode('SelfIntroTL = ', $library[1]);
         $libraryTradJp = explode('SelfIntroTL = ', $library[2]);
+        $libraryNoteCn = explode('SelfIntroNote = ', $library[1]);
         $azurLaneJp = explode('|', $libraryJp[1])[0];
         if (trim($azurLaneJp) === "") {
             $azurLaneJp = explode('|', $libraryCn[2])[0];
@@ -131,7 +133,8 @@ class ShipInfo
             if (trim($azurLaneEn) === "")
                 $azurLaneEn = explode('|', $libraryTradCn[2])[0];
         }
-        return(array($azurLaneImage, $azurLaneAudio, $azurLaneJp, $azurLaneEn));
+        $azurLaneNote = explode('|', $libraryNoteCn[1])[0];
+        return(array($azurLaneImage, $azurLaneAudio, $azurLaneJp, $azurLaneEn, $azurLaneNote));
     }
 }
 ?>

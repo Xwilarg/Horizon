@@ -14,6 +14,8 @@ http.onreadystatechange = function() {
         document.getElementById("textIntroAzurLaneJp").innerHTML = json[5];
         document.getElementById("textIntroKancolleEn").innerHTML = json[6];
         document.getElementById("textIntroAzurLaneEn").innerHTML = json[7];
+        document.getElementById("textIntroKancolleNote").innerHTML = json[8];
+        document.getElementById("textIntroAzurLaneNote").innerHTML = json[9];
     }
 }
 http.open("GET", "php/searchShip.php?name=" + shipName, true);
