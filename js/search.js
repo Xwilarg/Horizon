@@ -68,7 +68,7 @@ function updateDictionary(validElems, value, elem, nameRef, kancolleValue) {
 function addElemToAutocomplete(elem, index) {
     let dictElem = validElems[elem];
     let kancolleValue = dictElem[2];
-    return (addAutocomplete(dictElem[0], dictElem[1], (kancolleValue & 1) === 1, (kancolleValue & 2) === 2, (kancolleValue & 3) === 3, index === currSelected));
+    return (addAutocomplete(dictElem[0], dictElem[1], (kancolleValue & 1) === 1, (kancolleValue & 2) === 2, (kancolleValue & 4) === 4, index === currSelected));
 }
 
 function displayAutocomplete() {
