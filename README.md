@@ -2,7 +2,7 @@
 | Unit tests | [![Build Status](https://travis-ci.org/Xwilarg/Horizon.svg?branch=master)](https://travis-ci.org/Xwilarg/Horizon) |
 | ----- | ------------ |
 
-A website to compare KanColle and Azur Lane ships<br/>
+A website to compare KanColle, Azur Lane and Warship Girls R ships<br/>
 It will display their image and introduction line (japanese and english).
 
 You can try it here: https://horizon.zirk.eu/ , just enter the name of the ship and press enter.<br/>
