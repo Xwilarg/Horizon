@@ -64,6 +64,19 @@ class ShipInfo
         return ($arr);
     }
 
+    public static function GetAllWarshipGirlsShips() {
+        $context = ShipInfo::GetContext();
+        $content = file_get_contents("https://shipgirlfriends.moe/ShipList", false, $context);
+        preg_match_all('/"en":"([^"]+)"/', $content, $matches); // Backslash aren't properly detected, I don't know why
+        $arr = array();
+        foreach ($matches[1] as $elem) {
+            if (!ShipInfo::IsInArray($elem, $arr)) {
+                array_push($arr, array(str_replace("ō", "ou", str_replace("ū", "uu", $elem))));
+            }
+        }
+        return ($arr);
+    }
+
     private static function RemoveUnwantedHtml($html) {
         return preg_replace("/<a [^>]+>([^<]+)+<\/a>/", "$1", $html);
     }

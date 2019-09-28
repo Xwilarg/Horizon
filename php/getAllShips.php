@@ -1,4 +1,4 @@
 <?php
     require 'ShipInfo.php';
-    echo(json_encode(array(ShipInfo::GetAllKancolleShips(), ShipInfo::GetAllAzurLaneShips())));
+    echo(json_encode(array(ShipInfo::GetAllKancolleShips(), ShipInfo::GetAllAzurLaneShips(), ShipInfo::GetAllWarshipGirlsShips())));
 ?>

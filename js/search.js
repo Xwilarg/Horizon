@@ -2,6 +2,7 @@ var didBegin = false;
 
 var kancolleShips = [];
 var azurLaneShips = [];
+var warshipGirlsShips = [];
 
 let http = new XMLHttpRequest();
 http.onreadystatechange = function() {
@@ -12,6 +13,9 @@ http.onreadystatechange = function() {
         });
         json[1].forEach(elem => {
             azurLaneShips.push(elem);
+        });
+        json[2].forEach(elem => {
+            warshipGirlsShips.push(elem);
         });
         didBegin = true;
     }
@@ -28,12 +32,16 @@ function selectMouse(name) {
     document.getElementById("form").submit();
 }
 
-function addAutocomplete(strongName, refName, isKancolle, isAzurLane, isSelected) {
+function addAutocomplete(strongName, refName, isKancolle, isAzurLane, isWarshipGirls, isSelected) {
     if (isSelected)
         res = '<div id="autocomplete-elem-selected"';
     else
         res = '<div id="autocomplete-elem"';
-    res += ' onclick="selectMouse(\'' + refName + '\')">' + strongName + '<game>' + ((isKancolle) ? ('<img id="helpImage" width="30" height="30" alt="KanColleLogo" src="img/KanColle.png">') : ('')) + ((isAzurLane) ? ('<img id="helpImage" width="30" height="30" alt="AzurLaneLogo" src="img/AzurLane.png">') : ('')) + '</game></div>';
+    res += ' onclick="selectMouse(\'' + refName + '\')">' + strongName + '<game>' +
+        ((isKancolle) ? ('<img id="helpImage" width="30" height="30" alt="KanColleLogo" src="img/KanColle.png">') : ('')) +
+        ((isAzurLane) ? ('<img id="helpImage" width="30" height="30" alt="AzurLaneLogo" src="img/AzurLane.png">') : ('')) +
+        ((isWarshipGirls) ? ('<img id="helpImage" width="30" height="30" alt="WarshipGirlsLogo" src="img/WarshipGirls.png">') : ('')) +
+        '</game></div>';
     return res;
 }
 
@@ -53,14 +61,14 @@ function updateDictionary(validElems, value, elem, nameRef, kancolleValue) {
         if (validElems[elem] == undefined)
             validElems[elem] = [ finalValue, nameRef.replace("&#39;", "%27"), kancolleValue ];
         else
-            validElems[elem] = [ finalValue, nameRef.replace("&#39;", "%27"), kancolleValue + validElems[elem][1] ];
+            validElems[elem] = [ finalValue, nameRef.replace("&#39;", "%27"), kancolleValue + validElems[elem][2] ];
     }
 }
 
 function addElemToAutocomplete(elem, index) {
     let dictElem = validElems[elem];
     let kancolleValue = dictElem[2];
-    return (addAutocomplete(dictElem[0], dictElem[1], kancolleValue != 2, kancolleValue != 1, index === currSelected));
+    return (addAutocomplete(dictElem[0], dictElem[1], (kancolleValue & 1) === 1, (kancolleValue & 2) === 2, (kancolleValue & 3) === 3, index === currSelected));
 }
 
 function displayAutocomplete() {
@@ -78,6 +86,9 @@ function displayAutocomplete() {
         });
         azurLaneShips.forEach(elem => { // Prepare autocomplete by taking all shipname that are contained in the user input
             updateDictionary(validElems, value, elem[0], (elem.length > 1) ? (elem[1]) : (elem[0]), 2);
+        });
+        warshipGirlsShips.forEach(elem => { // Prepare autocomplete by taking all shipname that are contained in the user input
+            updateDictionary(validElems, value, elem[0], (elem.length > 1) ? (elem[1]) : (elem[0]), 4);
         });
         for (let elem in validElems) { // At first we display all names at start with the user input
             if (index < 5 && elem.toLowerCase().startsWith(value)) {
