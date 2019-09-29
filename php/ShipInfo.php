@@ -153,7 +153,17 @@ class ShipInfo
     public static function GetWarshipGirlsInfo($name) {
         $name = str_replace("ou", "ō", str_replace("uu", "ū", $name));
         $context = ShipInfo::GetContext();
-        $id = json_decode(file_get_contents("https://shipgirlfriends.moe/hmdata/ship/list?search=" . urlencode($name), false, $context))->data->ships[0]->picId;
+        if (strpos($name, " ") !== false) {
+            $ships = json_decode(file_get_contents("https://shipgirlfriends.moe/hmdata/ship/list?search=" . urlencode(explode(" ", $name)[0]), false, $context))->data->ships;
+            for ($i = 0; $i < count($ships); $i++) {
+                if ($ships[$i]->name->en === $name) {
+                    $id = $ships[$i]->picId;
+                    break;
+                }
+            }
+        } else {
+            $id = json_decode(file_get_contents("https://shipgirlfriends.moe/hmdata/ship/list?search=" . urlencode($name), false, $context))->data->ships[0]->picId;
+        }
         $content = file_get_contents("https://shipgirlfriends.moe/ship/" . $id, false, $context);
         preg_match('/2c65d87b>zh<\/div>([^<]+)<\/div>/', $content, $match);
         return(array("https://image.shipgirlfriends.moe/images/ships/large/L_NORMAL_" . $id . ".png", "", $match[1], "", ""));
