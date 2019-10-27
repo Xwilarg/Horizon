@@ -165,7 +165,7 @@ class ShipInfo
             $id = json_decode(file_get_contents("https://shipgirlfriends.moe/hmdata/ship/list?search=" . urlencode($name), false, $context))->data->ships[0]->picId;
         }
         $content = file_get_contents("https://shipgirlfriends.moe/ship/" . $id, false, $context);
-        preg_match('/08a17c5a>zh<\/span>([^<]+)<\/div>/', $content, $match);
+        preg_match('/Introduction<\/td> <td colspan="8" data-v-08a17c5a>([^<]+)<\/td>/', $content, $match);
         return(array("https://image.shipgirlfriends.moe/images/ships/large/L_NORMAL_" . $id . ".png", "", $match[1], "", ""));
     }
 }
