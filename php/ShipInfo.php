@@ -164,9 +164,9 @@ class ShipInfo
         } else {
             $id = json_decode(file_get_contents("https://shipgirlfriends.moe/hmdata/ship/list?search=" . urlencode($name), false, $context))->data->ships[0]->picId;
         }
-        $contentJp = json_decode(file_get_contents("https://shipgirlfriends.moe/hmdata/ship/detail/4" . $id . "?server=jp", false, $context));
-        $contentEn = json_decode(file_get_contents("https://shipgirlfriends.moe/hmdata/ship/detail/4" . $id . "?server=jp", false, $context));
-        return(array($contentEn['illustrations'][0]['urls']['full']['normal'], "", $contentJp['dialogues'][0]['dialogue'][0]['text']['jp'], "", $contentJp['dialogues'][0]['dialogue'][0]['text']['en']));
+        $contentJp = json_decode(file_get_contents("https://shipgirlfriends.moe/hmdata/ship/detail/" . $id . "?server=jp", false, $context), true)['data'];
+        $contentEn = json_decode(file_get_contents("https://shipgirlfriends.moe/hmdata/ship/detail/" . $id . "?server=en", false, $context), true)['data'];
+        return(array($contentEn['illustrations'][0]['urls']['full']['normal'], "", $contentJp['dialogues'][0]['dialogue'][0]['text']['jr'], $contentEn['dialogues'][0]['dialogue'][0]['text']['en'], $contentEn['introduction']['en']));
     }
 }
 ?>
